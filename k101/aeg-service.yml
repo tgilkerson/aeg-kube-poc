@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: 2018-03-30T21:00:50Z
+  labels:
+    run: aeg-deployment
+  name: aeg-deployment
+  namespace: default
+  resourceVersion: "9517"
+  selfLink: /api/v1/namespaces/default/services/aeg-deployment
+  uid: 6d5f6cb1-345d-11e8-a6b6-42010a8000ce
+spec:
+  clusterIP: 10.43.244.235
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 31913
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: aeg-deployment
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer: {}
