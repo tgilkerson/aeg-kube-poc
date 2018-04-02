@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: 2018-03-30T21:00:50Z
+  labels:
+    run: aeg-deployment
+  name: aeg-deployment
+  namespace: default
+  resourceVersion: "9517"
+  selfLink: /api/v1/namespaces/default/services/aeg-deployment
+  uid: 6d5f6cb1-345d-11e8-a6b6-42010a8000ce
+spec:
+  clusterIP: 10.43.244.235
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 31913
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    run: aeg-deployment
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+
+  ---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: 2018-03-30T20:51:47Z
+  generation: 1
+  labels:
+    run: aeg-deployment
+  name: aeg-deployment
+  namespace: default
+  resourceVersion: "8885"
+  selfLink: /apis/extensions/v1beta1/namespaces/default/deployments/aeg-deployment
+  uid: 296d5544-345c-11e8-a6b6-42010a8000ce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: aeg-deployment
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: aeg-deployment
+    spec:
+      containers:
+      - image: nginx
+        env:
+          - name: PINGSVR_VERSION
+            value: "dev"
+          - name: PINGSVR_DEPLOYMENT_COLOR
+            value: "K8S"
+          - name: PINGSVR_BASE_URL
+            value: "35.192.36.223:8080"
+          - name: PINGSVR_MONGO_URL
+            value: "mongodb://nchanneldevelopers:4Retailers@kube-poc-1-shard-00-00-jdq28.mongodb.net:27017,kube-poc-1-shard-00-01-jdq28.mongodb.net:27017,kube-poc-1-shard-00-02-jdq28.mongodb.net:27017/test?ssl=true&replicaSet=kube-poc-1-shard-0&authSource=admin"
+        imagePullPolicy: IfNotPresent
+        name: aeg-deployment
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  conditions:
+  - lastTransitionTime: 2018-03-30T20:51:47Z
+    lastUpdateTime: 2018-03-30T20:51:47Z
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 1
+  replicas: 1
+  unavailableReplicas: 1
+  updatedReplicas: 1
